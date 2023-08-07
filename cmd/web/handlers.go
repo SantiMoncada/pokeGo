@@ -33,4 +33,5 @@ func getAbout(w http.ResponseWriter, r *http.Request) {
 
 func handleNotFound(w http.ResponseWriter, _ *http.Request) {
 	http.Error(w, "404 not found.", http.StatusNotFound)
+
 }

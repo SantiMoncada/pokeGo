@@ -17,6 +17,6 @@ func main() {
 
 	fmt.Println("Staring application on port", portNumber)
 
-	_ = http.ListenAndServe(":"+portNumber, nil)
+	_ = http.ListenAndServe("localhost:"+portNumber, nil)
 
 }
