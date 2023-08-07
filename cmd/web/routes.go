@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -17,18 +16,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		postHome(w, r)
 	default:
-		handleError(w, r)
+		handleNotFound(w, r)
 	}
-}
-
-func getHome(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintf(w, "hello world GET")
-
-}
-
-func postHome(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintf(w, "hello world POST")
-
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
@@ -36,15 +25,6 @@ func About(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		getAbout(w, r)
 	default:
-		handleError(w, r)
+		handleNotFound(w, r)
 	}
-}
-
-func getAbout(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello world about")
-
-}
-
-func handleError(w http.ResponseWriter, _ *http.Request) {
-	http.Error(w, "404 not found.", http.StatusNotFound)
 }

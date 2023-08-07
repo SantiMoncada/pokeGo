@@ -8,7 +8,6 @@ import (
 
 func main() {
 
-	//get port number
 	portNumber := os.Getenv("GO_SERVER_PORT")
 	if portNumber == "" {
 		portNumber = "8080"
