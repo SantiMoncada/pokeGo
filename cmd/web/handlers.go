@@ -3,10 +3,21 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"text/template"
 )
 
 func getHome(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintf(w, "hello world GET")
+
+	parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = parsedTemplate.Execute(w, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }
 
