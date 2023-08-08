@@ -3,27 +3,38 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"text/template"
 )
 
 func getHome(w http.ResponseWriter, _ *http.Request) {
 
-	Generations, err := getPokemonSpecies(10)
+	Generations, err := getPokeGenerations()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Fprintf(w, fmt.Sprintf("%#v\n", Generations))
-	// parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
+	parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// err = parsedTemplate.Execute(w, nil)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+	type templateDataType struct {
+		Name string
+		Id   string
+	}
+
+	var templateData []templateDataType
+
+	for _, val := range Generations.Results {
+		splited := strings.Split(val.Url, "/")
+		id := splited[6]
+		templateData = append(templateData, templateDataType{val.Name, id})
+	}
+
+	parsedTemplate.Execute(w, templateData)
 
 }
 

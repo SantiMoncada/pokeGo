@@ -2,6 +2,17 @@
 
 {{define "content"}}
 
-<h1>Home OwO</h1>
+<h1>Generation of pokemons</h1>
+
+
+<ul>
+    {{range .}}
+    <li >
+        <a href="/generation/{{.Id}}">
+            {{.Name }}
+        </a>
+    </li>
+    {{end}}
+</ul>
 
 {{end}}
