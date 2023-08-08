@@ -3,21 +3,27 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"text/template"
 )
 
 func getHome(w http.ResponseWriter, _ *http.Request) {
 
-	parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
+	Generations, err := getPokemonSpecies(10)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	err = parsedTemplate.Execute(w, nil)
+	fmt.Fprintf(w, fmt.Sprintf("%#v\n", Generations))
+	// parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
+
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	// err = parsedTemplate.Execute(w, nil)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
 }
 

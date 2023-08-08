@@ -40,7 +40,6 @@ func getPokeGenerations() (*Generations, error) {
 	json.Unmarshal(responseData, &jsonResponse)
 
 	return &jsonResponse, nil
-
 }
 
 type Generation struct {
@@ -49,6 +48,12 @@ type Generation struct {
 	MainRegion     Link   `json:"main_region"`
 	PokemonSpecies []Link `json:"pokemon_species"`
 	Types          []Link `json:"types"`
+	Moves          []Link `json:"moves"`
+	VersionGroups  []Link `json:"version_groups"`
+	Names          []struct {
+		Name     string `json:"name"`
+		Language Link   `json:"language"`
+	} `json:"names"`
 }
 
 func getPokeGeneration(i int64) (*Generation, error) {
@@ -113,6 +118,5 @@ func getPokemonSpecies(i int64) (*Species, error) {
 
 	json.Unmarshal(responseData, &jsonResponse)
 
-	fmt.Printf("%+v\n", jsonResponse.FlavorTextEntries[0])
 	return &jsonResponse, nil
 }
