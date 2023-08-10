@@ -1,0 +1,14 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="d-flex align-items-center flex-column gap-4">
+    <h1>{{.Name }}</h1>
+    <div style="min-height: 100px;">
+        <img src="{{.Sprites.FrontDefault}}" alt="image of pokemon">
+    </div>
+    <p>Weight: {{.Weight}}</p>
+    <p>Base experience: {{.BaseExperience}}</p>
+</div>
+
+
+{{end}}

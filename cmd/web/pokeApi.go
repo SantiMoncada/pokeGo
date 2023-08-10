@@ -78,31 +78,20 @@ func getPokeGeneration(i int64) (*Generation, error) {
 }
 
 type Species struct {
-	Name                 string `json:"name"`
-	Id                   int64  `json:"id"`
-	GenderRate           int64  `json:"gender_rate"`
-	HatchCounter         int64  `json:"hatch_counter"`
-	BaseHapiness         int64  `json:"base_happiness"`
-	CaptureRate          int64  `json:"capture_rate"`
-	HasGenderDifferences bool   `json:"has_gender_differences"`
-	IsBaby               bool   `json:"is_baby"`
-	IsLegendary          bool   `json:"is_legendary"`
-	IsMythical           bool   `json:"is_mythical"`
-	FormsSwitchable      bool   `json:"forms_switchable"`
-	Color                Link   `json:"color"`
-	EvolvesFromSpecies   Link   `json:"evolves_from_species"`
-	GrowthRate           Link   `json:"growth_rate"`
-	Generation           Link   `json:"generation"`
-	Habitat              Link   `json:"habitat"`
-	FlavorTextEntries    []struct {
-		FlavorText string `json:"flavor_text"`
-		Language   Link   `json:"language"`
-		Version    Link   `json:"version"`
-	} `json:"flavor_text_entries"`
+	Name           string `json:"name"`
+	Id             int64  `json:"id"`
+	Weight         int64  `json:"weight"`
+	BaseExperience int64  `json:"base_experience"`
+	Sprites        struct {
+		FrontDefault string `json:"front_default"`
+		BackDefault  string `json:"back_default"`
+		FrontShiny   string `json:"front_shiny"`
+		BackShiny    string `json:"back_shiny"`
+	} `json:"sprites"`
 }
 
 func getPokemonSpecies(i int64) (*Species, error) {
-	response, err := http.Get(fmt.Sprintf("%s/pokemon-species/%d/", baseApi, i))
+	response, err := http.Get(fmt.Sprintf("%s/pokemon/%d/", baseApi, i))
 
 	if err != nil {
 		return nil, err

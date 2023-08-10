@@ -1,18 +1,18 @@
 {{template "base" .}}
 
 {{define "content"}}
+<div class="d-flex align-items-center flex-column gap-4">
+    <h1>Generation of pokemons</h1>
 
-<h1>Generation of pokemons</h1>
-
-
-<ul>
-    {{range .}}
-    <li >
-        <a href="/generation/{{.Id}}">
+    <div class="d-flex flex-column gap-2 ">
+        {{range .}}
+        <a type="button" class="btn btn-outline-info" href="/pokemons?id={{.Id}}">
             {{.Name }}
         </a>
-    </li>
-    {{end}}
-</ul>
+        {{end}}
+    </div>
+
+</div>
+
 
 {{end}}

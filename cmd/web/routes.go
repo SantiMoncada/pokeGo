@@ -6,24 +6,32 @@ import (
 
 func setRoutes() {
 	http.HandleFunc("/", Home)
-	http.HandleFunc("/about", About)
+	http.HandleFunc("/pokemons", Pokemons)
+	http.HandleFunc("/pokemon_details", PokemonDetails)
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getHome(w, r)
-	case "POST":
-		postHome(w, r)
 	default:
 		handleNotFound(w, r)
 	}
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func Pokemons(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		getAbout(w, r)
+		getPokemons(w, r)
+	default:
+		handleNotFound(w, r)
+	}
+}
+
+func PokemonDetails(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		getPokemonDetails(w, r)
 	default:
 		handleNotFound(w, r)
 	}
