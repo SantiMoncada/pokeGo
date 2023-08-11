@@ -17,6 +17,6 @@ func main() {
 
 	fmt.Println("Staring application on port", portNumber)
 
-	_ = http.ListenAndServe("localhost:"+portNumber, mux)
+	_ = http.ListenAndServe("1:"+portNumber, mux)
 
 }
