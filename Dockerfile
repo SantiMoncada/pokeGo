@@ -9,6 +9,8 @@ COPY . .
 
 RUN  go build -o app cmd/web/*.go
 
+ENV DOCKER_RUNNING=true
+
 EXPOSE 8080
 
 CMD [ "./app" ]

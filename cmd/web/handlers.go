@@ -36,7 +36,7 @@ func getHome(w http.ResponseWriter, _ *http.Request) {
 		fmt.Println(err)
 	}
 
-	parsedTemplate := renderTemplate("Home")
+	parsedTemplate := renderTemplate("home")
 
 	parsedTemplate.Execute(w, Generations)
 }

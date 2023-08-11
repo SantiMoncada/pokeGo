@@ -13,10 +13,18 @@ func main() {
 		portNumber = "8080"
 	}
 
+	host := os.Getenv("GO_SERVER_HOST")
+	if os.Getenv("DOCKER_RUNNING") == "true" {
+		host = "0.0.0.0"
+	}
+	if host == "" {
+		host = "localhost"
+	}
+
 	mux := setRoutes()
 
-	fmt.Println("Staring application on port", portNumber)
+	fmt.Println("Staring application on", host, ":", portNumber, portNumber)
 
-	_ = http.ListenAndServe("1:"+portNumber, mux)
+	_ = http.ListenAndServe(host+":"+portNumber, mux)
 
 }
