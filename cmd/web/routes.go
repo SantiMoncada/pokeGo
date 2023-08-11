@@ -4,10 +4,18 @@ import (
 	"net/http"
 )
 
-func setRoutes() {
-	http.HandleFunc("/", Home)
-	http.HandleFunc("/pokemons", Pokemons)
-	http.HandleFunc("/pokemon_details", PokemonDetails)
+func setRoutes() *http.ServeMux {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/", Home)
+	mux.HandleFunc("/pokemons", Pokemons)
+	mux.HandleFunc("/pokemon_details", PokemonDetails)
+
+	dir := http.Dir("./static")
+	fs := http.FileServer(dir)
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	return mux
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {

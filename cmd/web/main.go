@@ -13,10 +13,10 @@ func main() {
 		portNumber = "8080"
 	}
 
-	setRoutes()
+	mux := setRoutes()
 
 	fmt.Println("Staring application on port", portNumber)
 
-	_ = http.ListenAndServe("localhost:"+portNumber, nil)
+	_ = http.ListenAndServe("localhost:"+portNumber, mux)
 
 }

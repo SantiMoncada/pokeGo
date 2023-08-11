@@ -21,7 +21,14 @@ type Generations struct {
 	Results  []Link `json:"results"`
 }
 
+var generationsCache *Generations = nil
+
 func getPokeGenerations() (*Generations, error) {
+
+	if generationsCache != nil {
+		fmt.Println("Using cache")
+		return generationsCache, nil
+	}
 
 	response, err := http.Get(fmt.Sprintf("%s/generation", baseApi))
 
@@ -39,6 +46,7 @@ func getPokeGenerations() (*Generations, error) {
 
 	json.Unmarshal(responseData, &jsonResponse)
 
+	generationsCache = &jsonResponse
 	return &jsonResponse, nil
 }
 
@@ -56,7 +64,15 @@ type Generation struct {
 	} `json:"names"`
 }
 
+var generationDataCache = make(map[int64]*Generation)
+
 func getPokeGeneration(i int64) (*Generation, error) {
+
+	val, ok := generationDataCache[i]
+
+	if ok {
+		return val, nil
+	}
 
 	response, err := http.Get(fmt.Sprintf("%s/generation/%d/", baseApi, i))
 
@@ -74,6 +90,8 @@ func getPokeGeneration(i int64) (*Generation, error) {
 
 	json.Unmarshal(responseData, &jsonResponse)
 
+	generationDataCache[i] = &jsonResponse
+
 	return &jsonResponse, nil
 }
 
@@ -90,7 +108,16 @@ type Species struct {
 	} `json:"sprites"`
 }
 
+var pokemonCache = make(map[int64]*Species)
+
 func getPokemonSpecies(i int64) (*Species, error) {
+
+	val, ok := pokemonCache[i]
+
+	if ok {
+		return val, nil
+	}
+
 	response, err := http.Get(fmt.Sprintf("%s/pokemon/%d/", baseApi, i))
 
 	if err != nil {
@@ -106,6 +133,8 @@ func getPokemonSpecies(i int64) (*Species, error) {
 	var jsonResponse Species
 
 	json.Unmarshal(responseData, &jsonResponse)
+
+	pokemonCache[i] = &jsonResponse
 
 	return &jsonResponse, nil
 }
