@@ -2,11 +2,31 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
 	"text/template"
 )
+
+var templateCache = make(map[string]*template.Template)
+
+func renderTemplate(templateName string) *template.Template {
+	val, ok := templateCache[templateName]
+	if ok {
+		return val
+	}
+
+	parsedTemplate, err := template.ParseFiles(fmt.Sprintf("./templates/%s.page.html", templateName), "./templates/base.layout.html")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	templateCache[templateName] = parsedTemplate
+
+	return parsedTemplate
+}
 
 func getHome(w http.ResponseWriter, _ *http.Request) {
 
@@ -16,11 +36,7 @@ func getHome(w http.ResponseWriter, _ *http.Request) {
 		fmt.Println(err)
 	}
 
-	parsedTemplate, err := template.ParseFiles("./templates/home.page.html", "./templates/base.layout.html")
-
-	if err != nil {
-		fmt.Println(err)
-	}
+	parsedTemplate := renderTemplate("Home")
 
 	type templateDataType struct {
 		Name string
@@ -69,11 +85,7 @@ func getPokemons(w http.ResponseWriter, r *http.Request) {
 		templateData.Species = append(templateData.Species, Specie{val.Name, id})
 	}
 
-	parsedTemplate, err := template.ParseFiles("./templates/pokemons.page.html", "./templates/base.layout.html")
-
-	if err != nil {
-		fmt.Println(err)
-	}
+	parsedTemplate := renderTemplate("pokemons")
 
 	parsedTemplate.Execute(w, templateData)
 }
@@ -87,11 +99,7 @@ func getPokemonDetails(w http.ResponseWriter, r *http.Request) {
 
 	res, _ := getPokemonSpecies(id2)
 
-	parsedTemplate, err := template.ParseFiles("./templates/pokemonDetails.page.html", "./templates/base.layout.html")
-
-	if err != nil {
-		fmt.Println(err)
-	}
+	parsedTemplate := renderTemplate("pokemonDetails")
 
 	parsedTemplate.Execute(w, res)
 }
