@@ -38,21 +38,7 @@ func getHome(w http.ResponseWriter, _ *http.Request) {
 
 	parsedTemplate := renderTemplate("Home")
 
-	type templateDataType struct {
-		Name string
-		Id   string
-	}
-
-	var templateData []templateDataType
-
-	for _, val := range Generations.Results {
-		splited := strings.Split(val.Url, "/")
-		id := splited[6]
-		templateData = append(templateData, templateDataType{val.Name, id})
-	}
-
-	parsedTemplate.Execute(w, templateData)
-
+	parsedTemplate.Execute(w, Generations)
 }
 
 func getPokemons(w http.ResponseWriter, r *http.Request) {

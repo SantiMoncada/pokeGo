@@ -5,7 +5,7 @@
     <h1>Generation of pokemons</h1>
 
     <div class="d-flex flex-column gap-2 ">
-        {{range .}}
+        {{range .Results}}
         <a type="button" class="btn btn-outline-info" href="/pokemons?id={{.Id}}">
             {{.Name }}
         </a>

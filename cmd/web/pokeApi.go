@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 const baseApi = "https://pokeapi.co/api/v2"
@@ -12,6 +13,13 @@ const baseApi = "https://pokeapi.co/api/v2"
 type Link struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+	Id   string
+}
+
+func getIdFromLink(link *Link) {
+	splited := strings.Split(link.Url, "/")
+	id := splited[6]
+	link.Id = id
 }
 
 type Generations struct {
@@ -26,7 +34,6 @@ var generationsCache *Generations = nil
 func getPokeGenerations() (*Generations, error) {
 
 	if generationsCache != nil {
-		fmt.Println("Using cache")
 		return generationsCache, nil
 	}
 
@@ -45,6 +52,10 @@ func getPokeGenerations() (*Generations, error) {
 	var jsonResponse Generations
 
 	json.Unmarshal(responseData, &jsonResponse)
+
+	for i := range jsonResponse.Results {
+		getIdFromLink(&jsonResponse.Results[i])
+	}
 
 	generationsCache = &jsonResponse
 	return &jsonResponse, nil
@@ -89,6 +100,10 @@ func getPokeGeneration(i int64) (*Generation, error) {
 	var jsonResponse Generation
 
 	json.Unmarshal(responseData, &jsonResponse)
+
+	for _, val := range jsonResponse.Names {
+		getIdFromLink(&val.Language)
+	}
 
 	generationDataCache[i] = &jsonResponse
 
