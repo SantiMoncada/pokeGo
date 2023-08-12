@@ -11,10 +11,6 @@ func setRoutes() *http.ServeMux {
 	mux.HandleFunc("/pokemons", Pokemons)
 	mux.HandleFunc("/pokemon_details", PokemonDetails)
 
-	dir := http.Dir("./static")
-	fs := http.FileServer(dir)
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-
 	return mux
 }
 
