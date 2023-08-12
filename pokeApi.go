@@ -122,6 +122,13 @@ type Species struct {
 		FrontShiny   string `json:"front_shiny"`
 		BackShiny    string `json:"back_shiny"`
 	} `json:"sprites"`
+	GameIndices []struct {
+		GameIndex int64 `json:"game_index"`
+		Version   struct {
+			Name string `json:"name"`
+			Url  string `json:"url"`
+		}
+	} `json:"game_indices"`
 }
 
 var pokemonCache = make(map[int64]*Species)
