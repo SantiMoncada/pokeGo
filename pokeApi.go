@@ -114,6 +114,7 @@ type Species struct {
 	Name           string `json:"name"`
 	Id             int64  `json:"id"`
 	Weight         int64  `json:"weight"`
+	Height         int64  `json:"height"`
 	BaseExperience int64  `json:"base_experience"`
 	Sprites        struct {
 		FrontDefault string `json:"front_default"`
