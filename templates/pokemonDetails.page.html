@@ -11,6 +11,17 @@
     <p>Weight: {{.Weight}}Kg</p>
     <p>Height: {{.Height}}M</p>
     <p>Base experience: {{.BaseExperience}}p</p>
+
+    <h3>Games:</h3>
+
+    <ul>
+        {{range .GameIndices}}
+        <li>
+            {{.Version.Name}}
+
+        </li>
+        {{end}}
+    </ul>
 </div>
 
 
