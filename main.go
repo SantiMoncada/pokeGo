@@ -11,6 +11,7 @@ func main() {
 	portNumber := os.Getenv("PORT")
 	if portNumber == "" {
 		portNumber = "8080"
+
 	}
 
 	host := os.Getenv("HOST")
