@@ -6,21 +6,29 @@
         <h1>{{.Name }}</h1>
     </div>
     <div style="min-height: 100px;">
-        <img src="{{.Sprites.FrontDefault}}" alt="image of pokemon">
+        <img src="{{.Sprites.FrontDefault}}" alt="image of the front of a pokemon">
+        {{if .Sprites.BackDefault}}
+        <img src="{{.Sprites.BackDefault}}" alt="image of the back of a pokemon">
+        {{end}}
     </div>
+
     <p>Weight: {{.Weight}}Kg</p>
     <p>Height: {{.Height}}M</p>
     <p>Base experience: {{.BaseExperience}}p</p>
 
-    <h3>List of games:</h3>
-
-    <ul>
+    {{if .GameIndices}}
+    
+    <ul class="list-group">
+        <li class="list-group-item">
+            <h3>List of games</h3>
+        </li>
         {{range .GameIndices}}
-        <li>
+        <li class="list-group-item">
             {{.Version.Name}}
         </li>
         {{end}}
     </ul>
+    {{end}}
 </div>
 
 
