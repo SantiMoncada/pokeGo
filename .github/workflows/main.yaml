@@ -19,6 +19,7 @@ jobs:
           rm ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa
           ssh-keyscan -H 188.65.93.0 >> ~/.ssh/known_hosts
 
       - name: SSH into Remote Machine
