@@ -6,9 +6,12 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 const baseApi = "https://pokeapi.co/api/v2"
+
+const timeToExpire = 168 * time.Hour
 
 type Link struct {
 	Name string `json:"name"`
@@ -23,10 +26,11 @@ func getIdFromLink(link *Link) {
 }
 
 type Generations struct {
-	Count    int64  `json:"count"`
-	Next     string `json:"next"`
-	Previous string `json:"previous"`
-	Results  []Link `json:"results"`
+	Count     int64  `json:"count"`
+	Next      string `json:"next"`
+	Previous  string `json:"previous"`
+	Results   []Link `json:"results"`
+	timestamp time.Time
 }
 
 var generationsCache *Generations = nil
@@ -34,7 +38,14 @@ var generationsCache *Generations = nil
 func getPokeGenerations() (*Generations, error) {
 
 	if generationsCache != nil {
-		return generationsCache, nil
+		timeFetched := generationsCache.timestamp
+		expirationDate := timeFetched.Add(timeToExpire)
+
+		if time.Now().Before(expirationDate) {
+			return generationsCache, nil
+		}
+
+		generationsCache = nil
 	}
 
 	response, err := http.Get(fmt.Sprintf("%s/generation", baseApi))
@@ -57,7 +68,10 @@ func getPokeGenerations() (*Generations, error) {
 		getIdFromLink(&jsonResponse.Results[i])
 	}
 
+	jsonResponse.timestamp = time.Now()
+
 	generationsCache = &jsonResponse
+
 	return &jsonResponse, nil
 }
 
@@ -73,16 +87,24 @@ type Generation struct {
 		Name     string `json:"name"`
 		Language Link   `json:"language"`
 	} `json:"names"`
+	timestamp time.Time
 }
 
 var generationDataCache = make(map[int64]*Generation)
 
 func getPokeGeneration(i int64) (*Generation, error) {
 
-	val, ok := generationDataCache[i]
+	generationCache, ok := generationDataCache[i]
 
 	if ok {
-		return val, nil
+		timeFetched := generationCache.timestamp
+		expirationDate := timeFetched.Add(timeToExpire)
+
+		if time.Now().Before(expirationDate) {
+			return generationCache, nil
+		}
+
+		delete(generationDataCache, i)
 	}
 
 	response, err := http.Get(fmt.Sprintf("%s/generation/%d/", baseApi, i))
@@ -104,6 +126,8 @@ func getPokeGeneration(i int64) (*Generation, error) {
 	for _, val := range jsonResponse.Names {
 		getIdFromLink(&val.Language)
 	}
+
+	jsonResponse.timestamp = time.Now()
 
 	generationDataCache[i] = &jsonResponse
 
@@ -129,16 +153,24 @@ type Species struct {
 			Url  string `json:"url"`
 		}
 	} `json:"game_indices"`
+	timestamp time.Time
 }
 
-var pokemonCache = make(map[int64]*Species)
+var pokemonsCache = make(map[int64]*Species)
 
 func getPokemonSpecies(i int64) (*Species, error) {
 
-	val, ok := pokemonCache[i]
+	pokemonCache, ok := pokemonsCache[i]
 
 	if ok {
-		return val, nil
+		timeFetched := pokemonCache.timestamp
+		expirationDate := timeFetched.Add(timeToExpire)
+
+		if time.Now().Before(expirationDate) {
+			return pokemonCache, nil
+		}
+
+		delete(pokemonsCache, i)
 	}
 
 	response, err := http.Get(fmt.Sprintf("%s/pokemon/%d/", baseApi, i))
@@ -157,7 +189,9 @@ func getPokemonSpecies(i int64) (*Species, error) {
 
 	json.Unmarshal(responseData, &jsonResponse)
 
-	pokemonCache[i] = &jsonResponse
+	jsonResponse.timestamp = time.Now()
+
+	pokemonsCache[i] = &jsonResponse
 
 	return &jsonResponse, nil
 }
