@@ -22,7 +22,7 @@ jobs:
 
       - name: SSH into Remote Machine
         run: |
-          ssh sads@188.65.93.0
+          ssh -i ~/.ssh/id_rsa sads@188.65.93.0
 
       - name: go to project directory
         run: |
