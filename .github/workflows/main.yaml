@@ -1,0 +1,49 @@
+name: Deploy to Remote Machine
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H your_remote_machine_ip >> ~/.ssh/known_hosts
+
+      - name: SSH into Remote Machine
+        run: |
+          ssh sads@santiserver.nowddns.com
+
+      - name: go to project directory
+        run: |
+          cd Documents/go/pokeGo
+
+      - name: delete old binary
+        run: |
+          rm app
+
+      - name: get new code
+        run: |
+          git pull
+
+      - name: build new binary
+        run: |
+          go build -o app *.go
+
+      - name: stop old server
+        run: |
+          pm2 delete pokeGo
+
+      - name: start new server
+        run: |
+          go build -o app *.go
