@@ -18,11 +18,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H santiserver.nowddns.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H 188.65.93.0 >> ~/.ssh/known_hosts
 
       - name: SSH into Remote Machine
         run: |
-          ssh sads@santiserver.nowddns.com
+          ssh sads@188.65.93.0
 
       - name: go to project directory
         run: |
