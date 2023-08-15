@@ -1,52 +1,21 @@
-name: Deploy to Remote Machine
-
-on:
-  push:
-    branches:
-      - main
-
+name: remote ssh command
+on: [push]
 jobs:
-  deploy:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    env:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa
-          ssh-keyscan -H 188.65.93.0 >> ~/.ssh/known_hosts
-
-      - name: SSH into Remote Machine
-        run: |
-          ssh -v -i ~/.ssh/id_rsa sads@188.65.93.0
-
-      - name: go to project directory
-        run: |
-          cd Documents/go/pokeGo
-
-      - name: delete old binary
-        run: |
-          rm app
-
-      - name: get new code
-        run: |
-          git pull
-
-      - name: build new binary
-        run: |
-          go build -o app *.go
-
-      - name: stop old server
-        run: |
-          pm2 delete pokeGo
-
-      - name: start new server
-        run: |
-          go build -o app *.go
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd Documents/go/pokeGo
+            git pull
+            rm app
+            go build -o app *.go
+            pm2 delete pokeGo
+            pm2 start ./app --name pokeGo
