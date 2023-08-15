@@ -24,7 +24,6 @@ jobs:
             git reset --hard
             git pull
             rm app
-            go build -o app *.go
-            wait $!
+            go build -o app cmd/web/*.go
             pm2 delete pokeGo
             pm2 start ./app --name pokeGo
