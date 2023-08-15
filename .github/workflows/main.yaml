@@ -14,8 +14,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd Documents/go/pokeGo
+            git reset --hard
             git pull
             rm app
             go build -o app *.go
+            wait $!
             pm2 delete pokeGo
             pm2 start ./app --name pokeGo
